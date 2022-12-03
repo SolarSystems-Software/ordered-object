@@ -5,32 +5,36 @@ import (
 	"strings"
 )
 
-type pair[V any] struct {
-	key   string
-	value V
+// Pair represents a key value pair.
+type Pair[V any] struct {
+	// Key is the pair's key.
+	Key string
+
+	// Value is the key's value.
+	Value V
 }
 
 // Object represents a JSON object that respects insertion order.
-type Object[V any] []pair[V]
+type Object[V any] []Pair[V]
 
 // Set sets key in object with the given value.
 //
 // The key is replaced if it already exists.
 func (object *Object[V]) Set(key string, value V) {
 	for _, pair := range *object {
-		if pair.key == key {
-			pair.value = value
+		if pair.Key == key {
+			pair.Value = value
 			return
 		}
 	}
 
-	*object = append(*object, pair[V]{key, value})
+	*object = append(*object, Pair[V]{key, value})
 }
 
 // Has reports if the given key is set.
 func (object *Object[V]) Has(key string) bool {
 	for _, pair := range *object {
-		if pair.key == key {
+		if pair.Key == key {
 			return true
 		}
 	}
@@ -43,8 +47,8 @@ func (object *Object[V]) Has(key string) bool {
 // The returned value is V's zero value if key isn't set.
 func (object *Object[V]) Get(key string) V {
 	for _, pair := range *object {
-		if pair.key == key {
-			return pair.value
+		if pair.Key == key {
+			return pair.Value
 		}
 	}
 
@@ -67,7 +71,7 @@ func (object *Object[V]) MarshalJSON() ([]byte, error) {
 		}
 
 		// Write key
-		encodedKey, err := json.Marshal(pair.key)
+		encodedKey, err := json.Marshal(pair.Key)
 		if err != nil {
 			return nil, err
 		}
@@ -77,7 +81,7 @@ func (object *Object[V]) MarshalJSON() ([]byte, error) {
 		builder.WriteString(":")
 
 		// Write value
-		encodedValue, err := json.Marshal(pair.value)
+		encodedValue, err := json.Marshal(pair.Value)
 		if err != nil {
 			return nil, err
 		}
