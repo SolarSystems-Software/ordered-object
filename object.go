@@ -15,7 +15,7 @@ type Pair[V any] struct {
 }
 
 // Object represents a JSON object that respects insertion order.
-type Object[V any] []Pair[V]
+type Object[V any] []*Pair[V]
 
 // Set sets key in object with the given value.
 //
@@ -28,7 +28,7 @@ func (object *Object[V]) Set(key string, value V) {
 		}
 	}
 
-	*object = append(*object, Pair[V]{key, value})
+	*object = append(*object, &Pair[V]{key, value})
 }
 
 // Has reports if the given key is set.
