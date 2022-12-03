@@ -10,7 +10,7 @@ type Pair[V any] struct {
 	// Key is the pair's key.
 	Key string
 
-	// Value is the key's value.
+	// Value is the pair's value.
 	Value V
 }
 
